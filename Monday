@@ -1,0 +1,63 @@
+import java.util.Scanner;    
+import java.time.LocalTime; 
+
+interface Alarm {
+     void setAlarm(String time);
+    
+     void showAlarm();
+}
+abstract class Weekday implements Alarm {
+}
+class Monday extends Weekday {
+    private String alarmTime;
+
+    @Override
+    public void setAlarm(String time) {
+        this.alarmTime = time;
+    }
+
+    @Override
+    public void showAlarm() {
+        LocalTime alarm = LocalTime.parse(alarmTime);
+        LocalTime now = LocalTime.now();  
+        
+       
+        if (alarm.isBefore(now)) {
+            System.out.println("Alarm is set for tomorrow!");
+        } else if (alarm.isAfter(now)) {
+            System.out.println("I'll wake you up later!");
+        } else {
+            System.out.println("Alarm is turning off!");
+        }
+    }
+
+   
+    public static void main(String[] args) {
+       
+        Scanner scanner = new Scanner(System.in);
+        Monday monday = new Monday();
+        
+        boolean validInput = false;
+        String time = "";
+
+          while (!validInput) {
+            try {
+                System.out.print("Enter time for alarm in this format (HH:MM): ");
+                time = scanner.nextLine();
+                
+                if (!time.matches("^([01]?[0-9]|2[0-3]):([0-5]?[0-9])$")) {
+                    throw new IllegalArgumentException("Invalid! PLease enter according to this format (HH:MM)...");
+                }
+                LocalTime.parse(time); 
+                validInput = true; 
+            } catch (Exception e) {
+               
+                System.out.println(e.getMessage());
+            }
+        }
+        monday.setAlarm(time);
+        monday.showAlarm();
+        
+        scanner.close();
+    }
+}
